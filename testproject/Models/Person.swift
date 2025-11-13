@@ -1,8 +1,9 @@
 import SwiftUI
 import Foundation
+import FirebaseFirestore
 
 struct Person: Identifiable, Codable {
-    var id: UUID = UUID()
+    @DocumentID var id: String?
     var name: String
     var locationMet: String
     var major: String
@@ -21,7 +22,7 @@ struct Person: Identifiable, Codable {
     }
     
     init(
-        id: UUID = UUID(),
+        id: String? = nil,
         name: String = "No Name",
         locationMet: String = "",
         major: String = "",

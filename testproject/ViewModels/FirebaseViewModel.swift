@@ -30,6 +30,8 @@ class FirebaseViewModel: ObservableObject {
                 personToUpload.photoURL = url.absoluteString
             }
             
+            personToUpload.id = nil
+            
             // Save person data in Firestore
             try db.collection("USER")
                 .document(userID)
@@ -51,30 +53,35 @@ class FirebaseViewModel: ObservableObject {
         let userID = currentUserID
         
         do {
+            print("🔍 Fetching from USER/\(userID)/FRIENDS")
+            
             let snapshot = try await db.collection("USER")
                 .document(userID)
                 .collection("FRIENDS")
                 .getDocuments()
             
-            var fetched = snapshot.documents.compactMap { try? $0.data(as: Person.self) }
+            print("📄 Found \(snapshot.documents.count) documents")
             
-            // Download image data for display
-            for i in 0..<fetched.count {
-                if let urlString = fetched[i].photoURL, let url = URL(string: urlString) {
-                    do {
-                        let data = try Data(contentsOf: url)
-                        fetched[i].imageData = data
-                    } catch {
-                        print("Error loading image for \(fetched[i].name):", error.localizedDescription)
-                    }
+            var successfullyLoaded: [Person] = []
+            
+            for document in snapshot.documents {
+                print("📝 Document ID: \(document.documentID)")
+                print("📊 Document data: \(document.data())")
+                
+                do {
+                    let person = try document.data(as: Person.self)
+                    successfullyLoaded.append(person)
+                    print("✅ Successfully decoded: \(person.name)")
+                } catch {
+                    print("❌ Failed to decode document \(document.documentID): \(error)")
                 }
             }
             
-            self.people = fetched
-            print("✅ Successfully fetched \(fetched.count) people for \(userID)")
+            self.people = successfullyLoaded
+            print("✅ Final result: \(successfullyLoaded.count) people loaded")
             
         } catch {
-            print("Error fetching people:", error.localizedDescription)
+            print("❌ Error fetching people:", error.localizedDescription)
         }
     }
 }
