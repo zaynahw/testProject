@@ -35,15 +35,14 @@ timeline.xctimeline
 playground.xcworkspace
 
 # Swift Package Manager
-# Add this line if you want to avoid checking in source code from dependencies.
-# Packages/
+.build/
 # Package.pins
 # Package.resolved
-# *.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-.build/
+# Packages/
 
 # CocoaPods
 Pods/
+
 # Carthage
 Carthage/Build/
 
@@ -73,6 +72,6 @@ GoogleService-Info.plist
 *.log
 *.xcuserdatad
 
-# Editor
+# Editors
 .idea/
 .vscode/
