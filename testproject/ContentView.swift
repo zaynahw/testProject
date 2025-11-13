@@ -15,6 +15,7 @@ let mainPurple = Color(red: 0.353, green: 0.463, blue: 0.933)
 
 
 struct ContentView: View {
+    var vm: FirebaseViewModel = FirebaseViewModel()
     @State private var searchText = ""
     @State private var selectedFilters: [String] = []
     @State private var showAddSheet = false
